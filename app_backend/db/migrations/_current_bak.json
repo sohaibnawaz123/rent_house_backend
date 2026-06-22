@@ -1,0 +1,609 @@
+{
+    "tables": {
+        "cities": {
+            "tableName": "cities",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "name": {
+                    "allowNull": false,
+                    "field": "name",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "state_id": {
+                    "allowNull": false,
+                    "field": "state_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "state_code": {
+                    "allowNull": false,
+                    "field": "state_code",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "country_id": {
+                    "allowNull": false,
+                    "field": "country_id",
+                    "references": {
+                        "model": "countries",
+                        "key": "id"
+                    },
+                    "onDelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "country_code": {
+                    "allowNull": false,
+                    "field": "country_code",
+                    "seqType": "Sequelize.CHAR(2)"
+                },
+                "type": {
+                    "allowNull": true,
+                    "field": "type",
+                    "seqType": "Sequelize.STRING(191)"
+                },
+                "level": {
+                    "allowNull": true,
+                    "field": "level",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "parent_id": {
+                    "allowNull": true,
+                    "field": "parent_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "latitude": {
+                    "allowNull": false,
+                    "field": "latitude",
+                    "seqType": "Sequelize.DECIMAL(10, 8)"
+                },
+                "longitude": {
+                    "allowNull": false,
+                    "field": "longitude",
+                    "seqType": "Sequelize.DECIMAL(11, 8)"
+                },
+                "native": {
+                    "allowNull": true,
+                    "field": "native",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "population": {
+                    "allowNull": true,
+                    "field": "population",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "timezone": {
+                    "allowNull": true,
+                    "field": "timezone",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "translations": {
+                    "allowNull": true,
+                    "field": "translations",
+                    "seqType": "Sequelize.TEXT"
+                },
+                "flag": {
+                    "defaultValue": {
+                        "value": 1
+                    },
+                    "field": "flag",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "wikiDataId": {
+                    "allowNull": true,
+                    "field": "wiki_data_id",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "countries": {
+            "tableName": "countries",
+            "schema": {
+                "id": {
+                    "primaryKey": true,
+                    "autoIncrement": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "name": {
+                    "field": "name",
+                    "seqType": "Sequelize.STRING"
+                },
+                "iso3": {
+                    "field": "iso3",
+                    "seqType": "Sequelize.STRING"
+                },
+                "numeric_code": {
+                    "field": "numeric_code",
+                    "seqType": "Sequelize.STRING"
+                },
+                "iso2": {
+                    "field": "iso2",
+                    "seqType": "Sequelize.STRING"
+                },
+                "phonecode": {
+                    "field": "phonecode",
+                    "seqType": "Sequelize.STRING"
+                },
+                "capital": {
+                    "field": "capital",
+                    "seqType": "Sequelize.STRING"
+                },
+                "currency": {
+                    "field": "currency",
+                    "seqType": "Sequelize.STRING"
+                },
+                "currency_name": {
+                    "field": "currency_name",
+                    "seqType": "Sequelize.STRING"
+                },
+                "currency_symbol": {
+                    "field": "currency_symbol",
+                    "seqType": "Sequelize.STRING"
+                },
+                "tld": {
+                    "field": "tld",
+                    "seqType": "Sequelize.STRING"
+                },
+                "native": {
+                    "field": "native",
+                    "seqType": "Sequelize.STRING"
+                },
+                "population": {
+                    "field": "population",
+                    "seqType": "Sequelize.BIGINT"
+                },
+                "gdp": {
+                    "field": "gdp",
+                    "seqType": "Sequelize.BIGINT"
+                },
+                "region": {
+                    "field": "region",
+                    "seqType": "Sequelize.STRING"
+                },
+                "region_id": {
+                    "field": "region_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "subregion": {
+                    "field": "subregion",
+                    "seqType": "Sequelize.STRING"
+                },
+                "subregion_id": {
+                    "field": "subregion_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "nationality": {
+                    "field": "nationality",
+                    "seqType": "Sequelize.STRING"
+                },
+                "latitude": {
+                    "field": "latitude",
+                    "seqType": "Sequelize.DECIMAL"
+                },
+                "longitude": {
+                    "field": "longitude",
+                    "seqType": "Sequelize.DECIMAL"
+                },
+                "emoji": {
+                    "field": "emoji",
+                    "seqType": "Sequelize.STRING"
+                },
+                "emojiU": {
+                    "field": "emojiU",
+                    "seqType": "Sequelize.STRING"
+                },
+                "flag": {
+                    "field": "flag",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "wikiDataId": {
+                    "field": "wikiDataId",
+                    "seqType": "Sequelize.STRING"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "email_otp_tokens": {
+            "tableName": "email_otp_tokens",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "user_id": {
+                    "allowNull": false,
+                    "field": "user_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "otp_hash": {
+                    "allowNull": true,
+                    "field": "otp_hash",
+                    "seqType": "Sequelize.STRING(64)"
+                },
+                "expires_at": {
+                    "allowNull": true,
+                    "field": "expires_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "used": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "used",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "locations": {
+            "tableName": "locations",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "name": {
+                    "allowNull": false,
+                    "field": "name",
+                    "seqType": "Sequelize.STRING"
+                },
+                "city_id": {
+                    "allowNull": false,
+                    "field": "city_id",
+                    "references": {
+                        "model": "cities",
+                        "key": "id"
+                    },
+                    "onDelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "country_id": {
+                    "allowNull": false,
+                    "field": "country_id",
+                    "references": {
+                        "model": "countries",
+                        "key": "id"
+                    },
+                    "onDelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "password_reset_tokens": {
+            "tableName": "password_reset_tokens",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "user_id": {
+                    "allowNull": false,
+                    "field": "user_id",
+                    "references": {
+                        "model": "users",
+                        "key": "id"
+                    },
+                    "onDelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "token": {
+                    "allowNull": false,
+                    "field": "token",
+                    "seqType": "Sequelize.STRING"
+                },
+                "expires_at": {
+                    "allowNull": false,
+                    "field": "expires_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "used_at": {
+                    "allowNull": true,
+                    "field": "used_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "permissions": {
+            "tableName": "permissions",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "name": {
+                    "allowNull": false,
+                    "unique": true,
+                    "field": "name",
+                    "seqType": "Sequelize.STRING(100)"
+                },
+                "key": {
+                    "allowNull": false,
+                    "unique": true,
+                    "field": "key",
+                    "seqType": "Sequelize.STRING(100)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "role_permissions": {
+            "tableName": "role_permissions",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "role_id": {
+                    "allowNull": false,
+                    "field": "role_id",
+                    "unique": "role_permissions_role_id_permission_id_unique",
+                    "references": {
+                        "model": "roles",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "permission_id": {
+                    "allowNull": false,
+                    "field": "permission_id",
+                    "unique": "role_permissions_role_id_permission_id_unique",
+                    "references": {
+                        "model": "permissions",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                }
+            },
+            "indexes": {
+                "a98c30ac867c523c7a0ca4de9d6a6cb35d0605b5": {
+                    "unique": true,
+                    "fields": [
+                        "role_id",
+                        "permission_id"
+                    ],
+                    "name": "role_permissions_role_id_permission_id",
+                    "options": {
+                        "indexName": "role_permissions_role_id_permission_id",
+                        "name": "role_permissions_role_id_permission_id",
+                        "indicesType": "UNIQUE",
+                        "type": "UNIQUE"
+                    }
+                }
+            }
+        },
+        "roles": {
+            "tableName": "roles",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "name": {
+                    "allowNull": false,
+                    "unique": true,
+                    "field": "name",
+                    "seqType": "Sequelize.STRING(100)"
+                },
+                "description": {
+                    "allowNull": true,
+                    "field": "description",
+                    "seqType": "Sequelize.STRING(255)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "transfers": {
+            "tableName": "transfers",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "from_location_id": {
+                    "allowNull": false,
+                    "field": "from_location_id",
+                    "references": {
+                        "model": "locations",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "to_location_id": {
+                    "allowNull": false,
+                    "field": "to_location_id",
+                    "references": {
+                        "model": "locations",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "transfer_name": {
+                    "allowNull": false,
+                    "field": "transfer_name",
+                    "seqType": "Sequelize.STRING"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "users": {
+            "tableName": "users",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "username": {
+                    "field": "username",
+                    "seqType": "Sequelize.STRING(25)"
+                },
+                "email": {
+                    "allowNull": false,
+                    "unique": true,
+                    "field": "email",
+                    "seqType": "Sequelize.STRING"
+                },
+                "password": {
+                    "allowNull": false,
+                    "field": "password",
+                    "seqType": "Sequelize.STRING"
+                },
+                "role_id": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": 2
+                    },
+                    "references": {
+                        "model": "roles",
+                        "key": "id"
+                    },
+                    "field": "role_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "email_verified": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "email_verified",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "email_verification_token": {
+                    "allowNull": true,
+                    "field": "email_verification_token",
+                    "seqType": "Sequelize.STRING"
+                },
+                "email_verification_expires": {
+                    "allowNull": true,
+                    "field": "email_verification_expires",
+                    "seqType": "Sequelize.DATE"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        }
+    },
+    "revision": 1
+}
