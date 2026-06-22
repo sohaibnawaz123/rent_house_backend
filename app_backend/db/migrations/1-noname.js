@@ -9,9 +9,10 @@ var Sequelize = require('sequelize');
  * createTable "email_otp_tokens", deps: []
  * createTable "permissions", deps: []
  * createTable "roles", deps: []
+ * createTable "users", deps: [roles]
  * createTable "cities", deps: [countries]
  * createTable "locations", deps: [cities, countries]
- * createTable "users", deps: [roles]
+ * createTable "addresses", deps: [users]
  * createTable "role_permissions", deps: [roles, permissions]
  * createTable "transfers", deps: [locations, locations]
  * createTable "password_reset_tokens", deps: [users]
@@ -22,7 +23,7 @@ var Sequelize = require('sequelize');
 var info = {
     "revision": 1,
     "name": "noname",
-    "created": "2026-06-19T11:27:56.617Z",
+    "created": "2026-06-22T12:16:29.403Z",
     "comment": ""
 };
 
@@ -269,6 +270,75 @@ var migrationCommands = [{
     {
         fn: "createTable",
         params: [
+            "users",
+            {
+                "id": {
+                    "type": Sequelize.INTEGER,
+                    "field": "id",
+                    "primaryKey": true,
+                    "autoIncrement": true
+                },
+                "username": {
+                    "type": Sequelize.STRING(25),
+                    "field": "username",
+                    "allowNull": false
+                },
+                "email": {
+                    "type": Sequelize.STRING,
+                    "field": "email",
+                    "unique": true,
+                    "allowNull": false
+                },
+                "password": {
+                    "type": Sequelize.STRING,
+                    "field": "password",
+                    "allowNull": false
+                },
+                "role_id": {
+                    "type": Sequelize.INTEGER,
+                    "onUpdate": "CASCADE",
+                    "onDelete": "NO ACTION",
+                    "field": "role_id",
+                    "references": {
+                        "model": "roles",
+                        "key": "id"
+                    },
+                    "defaultValue": 2,
+                    "allowNull": false
+                },
+                "email_verified": {
+                    "type": Sequelize.BOOLEAN,
+                    "field": "email_verified",
+                    "defaultValue": false,
+                    "allowNull": false
+                },
+                "email_verification_token": {
+                    "type": Sequelize.STRING,
+                    "field": "email_verification_token",
+                    "allowNull": true
+                },
+                "email_verification_expires": {
+                    "type": Sequelize.DATE,
+                    "field": "email_verification_expires",
+                    "allowNull": true
+                },
+                "createdAt": {
+                    "type": Sequelize.DATE,
+                    "field": "createdAt",
+                    "allowNull": false
+                },
+                "updatedAt": {
+                    "type": Sequelize.DATE,
+                    "field": "updatedAt",
+                    "allowNull": false
+                }
+            },
+            {}
+        ]
+    },
+    {
+        fn: "createTable",
+        params: [
             "cities",
             {
                 "id": {
@@ -432,7 +502,7 @@ var migrationCommands = [{
     {
         fn: "createTable",
         params: [
-            "users",
+            "addresses",
             {
                 "id": {
                     "type": Sequelize.INTEGER,
@@ -440,55 +510,70 @@ var migrationCommands = [{
                     "primaryKey": true,
                     "autoIncrement": true
                 },
-                "username": {
-                    "type": Sequelize.STRING(25),
-                    "field": "username"
-                },
-                "email": {
-                    "type": Sequelize.STRING,
-                    "field": "email",
-                    "unique": true,
-                    "allowNull": false
-                },
-                "password": {
-                    "type": Sequelize.STRING,
-                    "field": "password",
-                    "allowNull": false
-                },
-                "role_id": {
+                "user_id": {
                     "type": Sequelize.INTEGER,
-                    "field": "role_id",
+                    "field": "user_id",
+                    "onUpdate": "CASCADE",
+                    "onDelete": "CASCADE",
                     "references": {
-                        "model": "roles",
+                        "model": "users",
                         "key": "id"
                     },
-                    "defaultValue": 2,
                     "allowNull": false
                 },
-                "email_verified": {
-                    "type": Sequelize.BOOLEAN,
-                    "field": "email_verified",
-                    "defaultValue": false,
-                    "allowNull": false
-                },
-                "email_verification_token": {
-                    "type": Sequelize.STRING,
-                    "field": "email_verification_token",
+                "lat": {
+                    "type": Sequelize.DECIMAL(10, 8),
+                    "field": "lat",
                     "allowNull": true
                 },
-                "email_verification_expires": {
-                    "type": Sequelize.DATE,
-                    "field": "email_verification_expires",
+                "lon": {
+                    "type": Sequelize.DECIMAL(11, 8),
+                    "field": "lon",
+                    "allowNull": true
+                },
+                "city": {
+                    "type": Sequelize.STRING,
+                    "field": "city",
+                    "allowNull": true
+                },
+                "state": {
+                    "type": Sequelize.STRING,
+                    "field": "state",
+                    "allowNull": true
+                },
+                "country": {
+                    "type": Sequelize.STRING,
+                    "field": "country",
+                    "allowNull": true
+                },
+                "zipcode": {
+                    "type": Sequelize.STRING,
+                    "field": "zipcode",
+                    "allowNull": true
+                },
+                "addressline": {
+                    "type": Sequelize.TEXT,
+                    "field": "addressline",
+                    "allowNull": true
+                },
+                "countrycode": {
+                    "type": Sequelize.STRING(10),
+                    "field": "countrycode",
+                    "allowNull": true
+                },
+                "provincecode": {
+                    "type": Sequelize.STRING(10),
+                    "field": "provincecode",
                     "allowNull": true
                 },
                 "createdAt": {
                     "type": Sequelize.DATE,
-                    "field": "createdAt",
+                    "field": "created_at",
                     "allowNull": false
                 },
                 "updatedAt": {
                     "type": Sequelize.DATE,
-                    "field": "updatedAt",
+                    "field": "updated_at",
                     "allowNull": false
                 }
             },

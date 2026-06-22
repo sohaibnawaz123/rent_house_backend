@@ -1,5 +1,83 @@
 {
     "tables": {
+        "addresses": {
+            "tableName": "addresses",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "user_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "users",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "field": "user_id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "lat": {
+                    "allowNull": true,
+                    "field": "lat",
+                    "seqType": "Sequelize.DECIMAL(10, 8)"
+                },
+                "lon": {
+                    "allowNull": true,
+                    "field": "lon",
+                    "seqType": "Sequelize.DECIMAL(11, 8)"
+                },
+                "city": {
+                    "allowNull": true,
+                    "field": "city",
+                    "seqType": "Sequelize.STRING"
+                },
+                "state": {
+                    "allowNull": true,
+                    "field": "state",
+                    "seqType": "Sequelize.STRING"
+                },
+                "country": {
+                    "allowNull": true,
+                    "field": "country",
+                    "seqType": "Sequelize.STRING"
+                },
+                "zipcode": {
+                    "allowNull": true,
+                    "field": "zipcode",
+                    "seqType": "Sequelize.STRING"
+                },
+                "addressline": {
+                    "allowNull": true,
+                    "field": "addressline",
+                    "seqType": "Sequelize.TEXT"
+                },
+                "countrycode": {
+                    "allowNull": true,
+                    "field": "countrycode",
+                    "seqType": "Sequelize.STRING(10)"
+                },
+                "provincecode": {
+                    "allowNull": true,
+                    "field": "provincecode",
+                    "seqType": "Sequelize.STRING(10)"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
         "cities": {
             "tableName": "cities",
             "schema": {
@@ -547,6 +625,7 @@
                     "seqType": "Sequelize.INTEGER"
                 },
                 "username": {
+                    "allowNull": false,
                     "field": "username",
                     "seqType": "Sequelize.STRING(25)"
                 },
@@ -558,7 +637,6 @@
                 },
                 "password": {
                     "allowNull": false,
-                    "default": false,
                     "field": "password",
                     "seqType": "Sequelize.STRING"
                 },
@@ -572,6 +650,8 @@
                         "key": "id"
                     },
                     "field": "role_id",
+                    "onDelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
                     "seqType": "Sequelize.INTEGER"
                 },
                 "email_verified": {
@@ -606,5 +686,5 @@
             "indexes": []
         }
     },
-    "revision": 2
+    "revision": 1
 }
