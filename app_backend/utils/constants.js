@@ -42,6 +42,7 @@ const errorName = {
   ACCOUNTINACTIVE: "ACCOUNTINACTIVE",
   KEYISREQUIRED: "KEYISREQUIRED",
   LATLONREQUIRED: "LATLONREQUIRED",
+  NODATAFOUND: "NODATAFOUND",
 };
 const errorType = {
   FILEMISSING: {
@@ -192,6 +193,10 @@ const errorType = {
   LATLONREQUIRED: {
     message: "Lat and lon is required",
     statusCode: 400
+  },
+  NODATAFOUND: {
+    message: "NO DATA FOUND",
+    statusCode: 404
   },
 
 };

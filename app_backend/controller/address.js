@@ -36,18 +36,42 @@ const createAddress = async (req, res) => {
             );
         }
 
-        const address = await addresses.create({
-            user_id: userId,
-            lat,
-            lon,
-            city,
-            state,
-            country,
-            zipcode,
-            addressline,
-            countrycode,
-            provincecode,
+        const existingAddress = await addresses.findOne({
+            where: { user_id: userId },
         });
+
+        let address;
+
+        if (existingAddress) {
+            await existingAddress.update({
+                lat,
+                lon,
+                city,
+                state,
+                country,
+                zipcode,
+                addressline,
+                countrycode,
+                provincecode,
+            });
+
+            address = existingAddress;
+        } else {
+            address = await addresses.create({
+                user_id: userId,
+                lat,
+                lon,
+                city,
+                state,
+                country,
+                zipcode,
+                addressline,
+                countrycode,
+                provincecode,
+            });
+        }
+
+
 
         return successResponse(
             res,
@@ -67,6 +91,49 @@ const createAddress = async (req, res) => {
     }
 };
 
+const getAddress = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const address = await addresses.findOne({
+            where: { user_id: userId },
+        });
+
+        if (!address) {
+            return errorResponse(
+                res,
+                getErrorCode(errorName.NODATAFOUND)
+            );
+        }
+
+        const responseData = {
+            lat: address.lat,
+            lon: address.lon,
+            city: address.city,
+            state: address.state,
+            country: address.country,
+            zipcode: address.zipcode,
+            addressline: address.addressline,
+            countrycode: address.countrycode,
+            provincecode: address.provincecode,
+        };
+
+        return successResponse(
+            res,
+            "Address fetched successfully",
+            {
+                data: responseData,
+            },
+            200
+        );
+    } catch (error) {
+        return errorResponse(res, {
+            message: error.message || "Internal server error",
+            statusCode: 500,
+        });
+    }
+};
+
 module.exports = {
-    createAddress,
+    createAddress, getAddress
 };
