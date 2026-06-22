@@ -41,6 +41,7 @@ const errorName = {
   ALREADYREGISTERED: "ALREADYREGISTERED",
   ACCOUNTINACTIVE: "ACCOUNTINACTIVE",
   KEYISREQUIRED: "KEYISREQUIRED",
+  LATLONREQUIRED: "LATLONREQUIRED",
 };
 const errorType = {
   FILEMISSING: {
@@ -186,6 +187,10 @@ const errorType = {
   },
   ALREADYREGISTERED: {
     message: "Email already registered with a different role",
+    statusCode: 400
+  },
+  LATLONREQUIRED: {
+    message: "Lat and lon is required",
     statusCode: 400
   },
 
