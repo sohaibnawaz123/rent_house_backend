@@ -1,5 +1,8 @@
 .env*
 node_modules/
+app_backend/db/migrations/*.json
+app_backend/db/migrations/*.js
+app_backend/db/migrations/*
 .env.local
 package-lock.json
 app_backend/db/cities.json
