@@ -43,6 +43,7 @@ const errorName = {
   KEYISREQUIRED: "KEYISREQUIRED",
   LATLONREQUIRED: "LATLONREQUIRED",
   NODATAFOUND: "NODATAFOUND",
+  TOKENEXPIRED:"TOKENEXPIRED"
 };
 const errorType = {
   FILEMISSING: {
@@ -122,6 +123,7 @@ const errorType = {
     message: "Token is required",
     statusCode: 401,
   },
+  TOKENEXPIRED: { statusCode: 401, message: "Token expired" },
   INVALIDTOKEN: {
     message: "Invalid or Expired Token",
     statusCode: 400,

@@ -7,7 +7,7 @@ const {
   createAccessToken,
 } = require("../helper/helper");
 const path = require("path");
-const { Op, literal } = require("sequelize");
+const { Op, literal, where } = require("sequelize");
 const {
   errorResponse,
   successResponse,
@@ -314,6 +314,33 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const userLogout = async (req, res) => {
+
+  try {
+    const id = req.user.id;
+    const getUser = await users.findOne({
+      where: { id }
+    });
+
+    if (!getUser) {
+      return errorResponse(res, getErrorCode(errorName.INVALIDTOKEN))
+    }
+
+    await users.update({ refresh_token: null },
+      { where: { id } }
+    )
+
+    return res.status(200).json({
+      // success: true,
+      message: 'Logout'
+    });
+
+  } catch (error) {
+    return errorResponse(res, getErrorCode(errorName.INTERNALSERVER));
+  }
+
+}
+
 module.exports = {
   refreshToken,
   signUp,
@@ -321,4 +348,5 @@ module.exports = {
   verifyEmail,
   forgotPassword,
   resetPassword,
+  userLogout
 };
