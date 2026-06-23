@@ -65,6 +65,17 @@
                     "field": "provincecode",
                     "seqType": "Sequelize.STRING(10)"
                 },
+                "property_id": {
+                    "allowNull": true,
+                    "references": {
+                        "model": "properties",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "field": "property_id",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
                 "createdAt": {
                     "allowNull": false,
                     "field": "created_at",
@@ -482,6 +493,237 @@
             },
             "indexes": []
         },
+        "properties": {
+            "tableName": "properties",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "name": {
+                    "allowNull": false,
+                    "field": "name",
+                    "seqType": "Sequelize.STRING"
+                },
+                "description": {
+                    "field": "description",
+                    "seqType": "Sequelize.TEXT"
+                },
+                "price_per_month": {
+                    "allowNull": false,
+                    "field": "price_per_month",
+                    "seqType": "Sequelize.DECIMAL(10, 2)"
+                },
+                "user_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "users",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "field": "user_id",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "status": {
+                    "defaultValue": {
+                        "value": "rent"
+                    },
+                    "field": "status",
+                    "seqType": "Sequelize.ENUM('rent', 'sale')"
+                },
+                "is_featured": {
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "is_featured",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "is_active": {
+                    "defaultValue": {
+                        "value": true
+                    },
+                    "field": "is_active",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "views_count": {
+                    "defaultValue": {
+                        "value": 0
+                    },
+                    "field": "views_count",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "property_details": {
+            "tableName": "property_details",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "property_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "properties",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "field": "property_id",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "bedrooms": {
+                    "defaultValue": {
+                        "value": 0
+                    },
+                    "field": "bedrooms",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "bathrooms": {
+                    "defaultValue": {
+                        "value": 0
+                    },
+                    "field": "bathrooms",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "area_sqft": {
+                    "field": "area_sqft",
+                    "seqType": "Sequelize.FLOAT"
+                },
+                "parking": {
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "parking",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "furnished": {
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "furnished",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "property_images": {
+            "tableName": "property_images",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "property_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "properties",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "field": "property_id",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "image_url": {
+                    "allowNull": false,
+                    "field": "image_url",
+                    "seqType": "Sequelize.STRING"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
+        "reviews": {
+            "tableName": "reviews",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "property_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "properties",
+                        "key": "id"
+                    },
+                    "field": "property_id",
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "user_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "users",
+                        "key": "id"
+                    },
+                    "field": "user_id",
+                    "onDelete": "NO ACTION",
+                    "onUpdate": "CASCADE",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "rating": {
+                    "allowNull": false,
+                    "field": "rating",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "comment": {
+                    "field": "comment",
+                    "seqType": "Sequelize.TEXT"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
         "role_permissions": {
             "tableName": "role_permissions",
             "schema": {
@@ -686,5 +928,5 @@
             "indexes": []
         }
     },
-    "revision": 1
+    "revision": 2
 }

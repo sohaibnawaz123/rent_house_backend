@@ -63,6 +63,15 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING(10),
                 allowNull: true,
             },
+            property_id: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                references: {
+                    model: "properties",
+                    key: "id",
+                },
+                onDelete: "CASCADE",
+            },
         },
         {
             tableName: "addresses",
@@ -76,6 +85,10 @@ module.exports = (sequelize, DataTypes) => {
         addresses.belongsTo(models.users, {
             foreignKey: "user_id",
             as: "user",
+        });
+        addresses.belongsTo(models.properties, {
+            foreignKey: "property_id",
+            as: "property",
         });
     };
 

@@ -8,7 +8,8 @@ const baseDirectory = "public";
 const directories = {
   user: [],
   logistic: [],
-  business: []
+  business: [],
+  "property-images": []
 };
 for (const [mainDir, subDirs] of Object.entries(directories)) {
   const mainPath = path.join(__dirname, baseDirectory, mainDir);
@@ -28,6 +29,7 @@ for (const [mainDir, subDirs] of Object.entries(directories)) {
 }
 // === Step 2: Express Middleware & Routes ===
 app.use("/api", mainRouter);
+app.use(app.multerErrorHandler);
 app.get("/", (req, res) => { res.status(200).send("Hously-Backend") });
 (async () => {
   try {
