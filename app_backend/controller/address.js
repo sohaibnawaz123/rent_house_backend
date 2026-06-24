@@ -7,6 +7,7 @@ const { Op } = require("sequelize");
 const createAddress = async (req, res) => {
     try {
         const userId = req.user.id;
+        const body = req.body || {};
 
         const {
             lat,
@@ -18,13 +19,29 @@ const createAddress = async (req, res) => {
             addressline,
             countrycode,
             provincecode,
-        } = req.body;
+        } = body;
 
-        if (!lat || !lon) {
+        if (lat == null || lat === "" || lon == null || lon === "") {
             return errorResponse(
                 res,
                 getErrorCode(errorName.LATLONREQUIRED)
             );
+        }
+
+        const latitude = Number(lat);
+        const longitude = Number(lon);
+
+        if (
+            !Number.isFinite(latitude) ||
+            latitude < -90 ||
+            latitude > 90 ||
+            !Number.isFinite(longitude) ||
+            longitude < -180 ||
+            longitude > 180
+        ) {
+            return res.status(400).json({
+                message: "Valid latitude and longitude are required",
+            });
         }
 
         const existingUser = await users.findByPk(userId);
@@ -44,8 +61,8 @@ const createAddress = async (req, res) => {
 
         if (existingAddress) {
             await existingAddress.update({
-                lat,
-                lon,
+                lat: latitude,
+                lon: longitude,
                 city,
                 state,
                 country,
@@ -59,8 +76,8 @@ const createAddress = async (req, res) => {
         } else {
             address = await addresses.create({
                 user_id: userId,
-                lat,
-                lon,
+                lat: latitude,
+                lon: longitude,
                 city,
                 state,
                 country,

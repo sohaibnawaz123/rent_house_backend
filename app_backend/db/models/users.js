@@ -84,6 +84,18 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "role_id",
             as: "role",
         });
+
+        users.hasMany(models.favorites, {
+            foreignKey: "user_id",
+            as: "favoriteEntries",
+        });
+
+        users.belongsToMany(models.properties, {
+            through: models.favorites,
+            foreignKey: "user_id",
+            otherKey: "property_id",
+            as: "favoriteProperties",
+        });
     };
 
     // Hash password before create

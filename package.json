@@ -20,6 +20,7 @@
     "db:create:seed": "npx sequelize-cli seed:generate --name your-seeder-name",
     "db:seed:all": "npx sequelize-cli db:seed:all",
     "db:seed:roles": "npx sequelize-cli db:seed --seed 20251209081824-seed-roles.js",
+    "db:seed:property-demo": "npx sequelize-cli db:seed --seed 20260624000000-seed-property-home-demo.js",
     "db:seedAll:local": "cross-env NODE_ENV=local npx sequelize-cli db:seed:all",
     "db:seedAll:staging": "cross-env NODE_ENV=staging npx sequelize-cli db:seed:all",
     "db:seedAll:production": "cross-env NODE_ENV=production npx sequelize-cli db:seed:all",

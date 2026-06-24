@@ -22,6 +22,38 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
 
+            property_type: {
+                type: DataTypes.STRING(30),
+                allowNull: false,
+                defaultValue: "house",
+                validate: {
+                    isIn: [[
+                        "house",
+                        "villa",
+                        "apartment",
+                        "homestay",
+                        "guest_house",
+                        "hotel",
+                        "other",
+                    ]],
+                },
+            },
+
+            currency: {
+                type: DataTypes.STRING(3),
+                allowNull: false,
+                defaultValue: "USD",
+            },
+
+            price_period: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+                defaultValue: "month",
+                validate: {
+                    isIn: [["night", "week", "month", "year", "total"]],
+                },
+            },
+
             user_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
@@ -40,6 +72,19 @@ module.exports = (sequelize, DataTypes) => {
             is_featured: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
+            },
+
+            is_recommended: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false,
+            },
+
+            recommendation_score: {
+                type: DataTypes.FLOAT,
+                defaultValue: 0,
+                validate: {
+                    min: 0,
+                },
             },
 
             is_active: {
@@ -89,6 +134,18 @@ module.exports = (sequelize, DataTypes) => {
         Property.hasMany(models.reviews, {
             foreignKey: "property_id",
             as: "reviews",
+        });
+
+        Property.hasMany(models.favorites, {
+            foreignKey: "property_id",
+            as: "favoriteEntries",
+        });
+
+        Property.belongsToMany(models.users, {
+            through: models.favorites,
+            foreignKey: "property_id",
+            otherKey: "user_id",
+            as: "favoritedByUsers",
         });
     };
 

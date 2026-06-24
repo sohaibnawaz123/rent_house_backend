@@ -3,6 +3,8 @@ node_modules/
 app_backend/db/migrations/*.json
 app_backend/db/migrations/*.js
 app_backend/db/migrations/*
+!app_backend/db/migrations/3-property-home-discovery.js
+!app_backend/db/migrations/4-create-favorites.js
 .env.local
 package-lock.json
 app_backend/db/cities.json

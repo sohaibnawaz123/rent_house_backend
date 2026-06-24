@@ -362,6 +362,67 @@
             },
             "indexes": []
         },
+        "favorites": {
+            "tableName": "favorites",
+            "schema": {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "id",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "user_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "users",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "field": "user_id",
+                    "unique": "favorites_user_id_property_id_unique",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "property_id": {
+                    "allowNull": false,
+                    "references": {
+                        "model": "properties",
+                        "key": "id"
+                    },
+                    "onDelete": "CASCADE",
+                    "onUpdate": "CASCADE",
+                    "field": "property_id",
+                    "unique": "favorites_user_id_property_id_unique",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "created_at",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updated_at",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": {
+                "1470697bab08ea54f2af041a4debd051f3a47634": {
+                    "unique": true,
+                    "fields": [
+                        "user_id",
+                        "property_id"
+                    ],
+                    "name": "favorites_user_property_unique",
+                    "options": {
+                        "indexName": "favorites_user_property_unique",
+                        "name": "favorites_user_property_unique",
+                        "indicesType": "UNIQUE",
+                        "type": "UNIQUE"
+                    }
+                }
+            }
+        },
         "locations": {
             "tableName": "locations",
             "schema": {
@@ -516,6 +577,54 @@
                     "field": "price_per_month",
                     "seqType": "Sequelize.DECIMAL(10, 2)"
                 },
+                "property_type": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": "house"
+                    },
+                    "validate": {
+                        "isIn": [
+                            [
+                                "house",
+                                "villa",
+                                "apartment",
+                                "homestay",
+                                "guest_house",
+                                "hotel",
+                                "other"
+                            ]
+                        ]
+                    },
+                    "field": "property_type",
+                    "seqType": "Sequelize.STRING(30)"
+                },
+                "currency": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": "USD"
+                    },
+                    "field": "currency",
+                    "seqType": "Sequelize.STRING(3)"
+                },
+                "price_period": {
+                    "allowNull": false,
+                    "defaultValue": {
+                        "value": "month"
+                    },
+                    "validate": {
+                        "isIn": [
+                            [
+                                "night",
+                                "week",
+                                "month",
+                                "year",
+                                "total"
+                            ]
+                        ]
+                    },
+                    "field": "price_period",
+                    "seqType": "Sequelize.STRING(20)"
+                },
                 "user_id": {
                     "allowNull": false,
                     "references": {
@@ -540,6 +649,23 @@
                     },
                     "field": "is_featured",
                     "seqType": "Sequelize.BOOLEAN"
+                },
+                "is_recommended": {
+                    "defaultValue": {
+                        "value": false
+                    },
+                    "field": "is_recommended",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "recommendation_score": {
+                    "defaultValue": {
+                        "value": 0
+                    },
+                    "validate": {
+                        "min": 0
+                    },
+                    "field": "recommendation_score",
+                    "seqType": "Sequelize.FLOAT"
                 },
                 "is_active": {
                     "defaultValue": {
@@ -928,5 +1054,5 @@
             "indexes": []
         }
     },
-    "revision": 2
+    "revision": 3
 }
