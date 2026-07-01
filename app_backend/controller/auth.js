@@ -327,31 +327,32 @@ const resetPassword = async (req, res) => {
 };
 
 const userLogout = async (req, res) => {
-
   try {
-    const id = req.user.id;
+    const id = req.user?.id;
+
+    if (!id) {
+      return errorResponse(res, getErrorCode(errorName.INVALIDTOKEN));
+    }
+
     const getUser = await users.findOne({
       where: { id }
     });
 
     if (!getUser) {
-      return errorResponse(res, getErrorCode(errorName.INVALIDTOKEN))
+      return errorResponse(res, getErrorCode(errorName.INVALIDTOKEN));
     }
 
-    await users.update({ refresh_token: null },
-      { where: { id } }
-    )
-
-    return res.status(200).json({
-      // success: true,
-      message: 'Logout'
-    });
+    return successResponse(
+      res,
+      successName.LOGOUT,
+      {},
+      200
+    );
 
   } catch (error) {
     return errorResponse(res, getErrorCode(errorName.INTERNALSERVER));
   }
-
-}
+};
 
 module.exports = {
   refreshToken,
