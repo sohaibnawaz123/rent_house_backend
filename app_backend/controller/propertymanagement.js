@@ -363,6 +363,11 @@ const formatPropertyCard = (property, coordinates = null) => {
     };
 };
 
+const formatExploreCard = (card) => {
+    const { details, agent, ...exploreCard } = card;
+    return exploreCard;
+};
+
 const fetchActivePropertyCards = async (coordinates = null) => {
     const properties = await Property.findAll({
         where: { is_active: true },
@@ -742,6 +747,100 @@ const getPopularProperties = async (req, res) => {
     }
 };
 
+const getHomeExplore = async (req, res) => {
+    try {
+        const rawType = String(req.query.type || "")
+            .trim()
+            .toLowerCase();
+        const type = rawType.replace(/_/g, "-");
+
+        if (!type) {
+            return res.status(400).json({
+                message:
+                    "type query parameter is required. Use recommended, nearby, top-locations, or popular",
+            });
+        }
+
+        if (type === "recommended") {
+            const cards = await fetchActivePropertyCards();
+            const result = paginate(
+                sortRecommended(cards).map(formatExploreCard),
+                req.query
+            );
+
+            return res.status(200).json({
+                message: "Recommended properties fetched successfully",
+                ...result,
+            });
+        }
+
+        if (type === "nearby") {
+            const lat = Number(req.query.lat);
+            const lon = Number(req.query.lon);
+            const radiusKm = Number(req.query.radius_km || 50);
+
+            if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+                return res.status(400).json({
+                    message:
+                        "Valid lat and lon query parameters are required for type=nearby",
+                });
+            }
+
+            const cards = await fetchActivePropertyCards({ lat, lon });
+            const nearby = cards
+                .filter(
+                    (card) =>
+                        card.distance_km != null &&
+                        (!Number.isFinite(radiusKm) ||
+                            card.distance_km <= radiusKm)
+                )
+                .sort(
+                    (a, b) =>
+                        a.distance_km - b.distance_km ||
+                        b.rating - a.rating
+                )
+                .map(formatExploreCard);
+            const result = paginate(nearby, req.query);
+
+            return res.status(200).json({
+                message: "Nearby properties fetched successfully",
+                ...result,
+            });
+        }
+
+        if (type === "top-locations") {
+            const cards = await fetchActivePropertyCards();
+            const locations = buildTopLocations(cards, Number.MAX_SAFE_INTEGER);
+            const result = paginate(locations, req.query);
+
+            return res.status(200).json({
+                message: "Top locations fetched successfully",
+                ...result,
+            });
+        }
+
+        if (type === "popular") {
+            const cards = await fetchActivePropertyCards();
+            const result = paginate(
+                sortPopular(cards).map(formatExploreCard),
+                req.query
+            );
+
+            return res.status(200).json({
+                message: "Popular properties fetched successfully",
+                ...result,
+            });
+        }
+
+        return res.status(400).json({
+            message:
+                "Invalid type. Use recommended, nearby, top-locations, or popular",
+        });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 const getHomeData = async (req, res) => {
     try {
         const sectionLimit = parsePositiveInt(req.query.limit, 5, 20);
@@ -782,6 +881,7 @@ module.exports = {
     createProperty,
     getPropertyDetail,
     getProperties,
+    getHomeExplore,
     getRecommendedProperties,
     getNearbyProperties,
     getTopLocations,

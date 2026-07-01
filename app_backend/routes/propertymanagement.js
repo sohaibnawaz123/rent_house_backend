@@ -3,10 +3,7 @@ const {
     createProperty,
     getProperties,
     getPropertyDetail,
-    getRecommendedProperties,
-    getNearbyProperties,
-    getTopLocations,
-    getPopularProperties,
+    getHomeExplore,
     getHomeData,
 } = require("../controller/propertymanagement");
 const { requireSignIn } = require("../middleware/authMiddleware");
@@ -37,9 +34,6 @@ router.post(
 router.get("/propertylist", getProperties);
 router.get("/property-detail", getPropertyDetail);
 router.get("/home", getHomeData);
-router.get("/home/recommended", getRecommendedProperties);
-router.get("/home/nearby", getNearbyProperties);
-router.get("/home/top-locations", getTopLocations);
-router.get("/home/popular", getPopularProperties);
+router.get("/home/explore", getHomeExplore);
 
 module.exports = router;
