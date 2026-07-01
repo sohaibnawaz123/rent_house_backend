@@ -8,11 +8,11 @@ const generateToken = (payload) => {
 };
 
 const decodeAccessToken = async (token) => {
-    const accessToken = jwt.verify(token, process.env.JWT_SECRET);
+    return jwt.verify(token, process.env.JWT_SECRET);
 };
 
 const decodeRefreshToken = async (token) => {
-    const accessToken = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 };
 
 

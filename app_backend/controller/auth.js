@@ -21,8 +21,19 @@ const { mailTransporter } = require("../config/mail.js");
 
 const refreshToken = async (req, res) => {
   try {
-    const { refresh_token } = req.body;
-    var { accessToken, refreshToken } = await createAccessToken(refresh_token);
+    const { refresh_token } = req.body || {};
+
+    if (!refresh_token) {
+      return errorResponse(res, getErrorCode(errorName.TOKENREQUIRED));
+    }
+
+    const tokenData = await createAccessToken(refresh_token);
+
+    if (!tokenData || tokenData.error) {
+      return errorResponse(res, getErrorCode(errorName.INVALIDTOKEN));
+    }
+
+    const { accessToken, refreshToken } = tokenData;
     return successResponse(
       res,
       successName.TOKENREFRESH,
@@ -30,6 +41,7 @@ const refreshToken = async (req, res) => {
       200
     );
   } catch (error) {
+    console.log(error.message)
     return errorResponse(res, getErrorCode(errorName.INTERNALSERVER));
   }
 };
