@@ -746,6 +746,11 @@
                     "field": "furnished",
                     "seqType": "Sequelize.BOOLEAN"
                 },
+                "public_facilities": {
+                    "allowNull": true,
+                    "field": "public_facilities",
+                    "seqType": "Sequelize.TEXT"
+                },
                 "createdAt": {
                     "allowNull": false,
                     "field": "created_at",
@@ -1054,5 +1059,5 @@
             "indexes": []
         }
     },
-    "revision": 3
+    "revision": 4
 }

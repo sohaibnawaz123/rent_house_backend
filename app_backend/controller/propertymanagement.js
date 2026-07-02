@@ -154,6 +154,11 @@ const cleanupUploadedFiles = async (files) => {
     );
 };
 
+const hasNonEmptyValue = (value) => {
+    if (Array.isArray(value)) return value.length > 0;
+    return value != null && value !== "";
+};
+
 const optionalNumber = (value, fieldName, options = {}) => {
     if (value == null || value === "") return null;
 
@@ -262,6 +267,10 @@ const normalizePropertyDetails = (details) => ({
     }),
     parking: toBoolean(details.parking),
     furnished: toBoolean(details.furnished),
+    public_facilities: parseStringArrayField(
+        details.public_facilities,
+        "details.public_facilities"
+    ),
 });
 
 const normalizePropertyAddress = (address) => {
@@ -368,6 +377,74 @@ const formatExploreCard = (card) => {
     return exploreCard;
 };
 
+const formatReview = (review) => {
+    const data = review?.toJSON ? review.toJSON() : review;
+
+    return {
+        id: data.id,
+        rating: Number(data.rating) || 0,
+        comment: data.comment || null,
+        created_at: data.createdAt || data.created_at || null,
+        updated_at: data.updatedAt || data.updated_at || null,
+        reviewer: data.user
+            ? {
+                id: data.user.id,
+                username: data.user.username,
+                email: data.user.email,
+            }
+            : null,
+    };
+};
+
+const buildPropertyDetailResponse = (property) => {
+    const data = property?.toJSON ? property.toJSON() : property;
+    const formattedReviews = (data.reviews || []).map(formatReview);
+    const ratings = formattedReviews
+        .map((review) => Number(review.rating))
+        .filter(Number.isFinite);
+    const averageRating = ratings.length
+        ? Number(
+            (
+                ratings.reduce((sum, rating) => sum + rating, 0) /
+                ratings.length
+            ).toFixed(1)
+        )
+        : 0;
+
+    return {
+        property: {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            property_type: data.property_type,
+            status: data.status,
+            price_per_month: Number(data.price_per_month),
+            currency: data.currency,
+            price_period: data.price_period,
+            is_featured: data.is_featured,
+            is_recommended: data.is_recommended,
+            recommendation_score: Number(data.recommendation_score || 0),
+            is_active: data.is_active,
+            views_count: Number(data.views_count || 0),
+            images: (data.images || []).map((image) => image.image_url),
+            address: data.address || null,
+            details: data.details || null,
+            public_facilities:
+                data.details?.public_facilities || [],
+            rating: averageRating,
+            reviews_count: formattedReviews.length,
+        },
+        host: data.agent
+            ? {
+                id: data.agent.id,
+                username: data.agent.username,
+                email: data.agent.email,
+            }
+            : null,
+        reviews: formattedReviews,
+    };
+};
+
 const fetchActivePropertyCards = async (coordinates = null) => {
     const properties = await Property.findAll({
         where: { is_active: true },
@@ -452,6 +529,7 @@ const createProperty = async (req, res) => {
             area_sqft: body.area_sqft,
             parking: body.parking,
             furnished: body.furnished,
+            public_facilities: body.public_facilities,
         }, "details");
         const rawAddress = parseCreateField(body.address, {
             lat: body.lat,
@@ -464,9 +542,7 @@ const createProperty = async (req, res) => {
             countrycode: body.countrycode,
             provincecode: body.provincecode,
         }, "address");
-        const hasDetails = Object.values(rawDetails).some(
-            (value) => value != null && value !== ""
-        );
+        const hasDetails = Object.values(rawDetails).some(hasNonEmptyValue);
         const hasAddress = Object.values(rawAddress).some(
             (value) => value != null && value !== ""
         );
@@ -593,20 +669,26 @@ const getProperties = async (req, res) => {
 };
 const getPropertyDetail = async (req, res) => {
     try {
-        const id = Number.parseInt(req.query.id, 10);
+        const propertyId = Number.parseInt(
+            req.query.propertyId ?? req.query.id,
+            10
+        );
 
-        if (!Number.isInteger(id) || id <= 0) {
+        if (!Number.isInteger(propertyId) || propertyId <= 0) {
             return res.status(400).json({
-                message: "A valid property id query parameter is required",
+                message:
+                    "A valid propertyId query parameter is required",
             });
         }
 
-        const property = await Property.findByPk(id, {
+        const property = await Property.findByPk(propertyId, {
             include: [
                 {
                     model: propertyimages,
                     as: "images",
-                    attributes: ["image_url"], // only needed field
+                    attributes: ["image_url"],
+                    separate: true,
+                    order: [["id", "ASC"]],
                 },
                 {
                     model: users,
@@ -620,6 +702,15 @@ const getPropertyDetail = async (req, res) => {
                 {
                     model: reviews,
                     as: "reviews",
+                    separate: true,
+                    order: [["created_at", "DESC"]],
+                    include: [
+                        {
+                            model: users,
+                            as: "user",
+                            attributes: ["id", "username", "email"],
+                        },
+                    ],
                 },
                 {
                     model: addresses,
@@ -636,36 +727,50 @@ const getPropertyDetail = async (req, res) => {
 
         // 🔥 convert images to array of strings
         await property.increment("views_count");
-
-        const formattedProperty = property.toJSON();
-        formattedProperty.views_count =
-            Number(formattedProperty.views_count || 0) + 1;
-
-        formattedProperty.images = formattedProperty.images.map(
-            (img) => img.image_url
+        property.set(
+            "views_count",
+            Number(property.views_count || 0) + 1
         );
-        const ratings = formattedProperty.reviews
-            .map((review) => Number(review.rating))
-            .filter(Number.isFinite);
-        formattedProperty.rating = ratings.length
-            ? Number(
-                (
-                    ratings.reduce((sum, rating) => sum + rating, 0) /
-                    ratings.length
-                ).toFixed(1)
-            )
-            : 0;
-        formattedProperty.reviews_count = ratings.length;
 
-        res.status(200).json({
-            message: "Property detail fetched",
-            data: formattedProperty,
+        return res.status(200).json({
+            message: "Property details fetched successfully",
+            data: buildPropertyDetailResponse(property),
         });
 
     } catch (err) {
         console.log("ERROR:", err);
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
+};
+
+const parseStringArrayField = (value, fieldName) => {
+    if (value == null || value === "") return [];
+
+    if (Array.isArray(value)) {
+        return value
+            .map((item) => String(item || "").trim())
+            .filter(Boolean);
+    }
+
+    if (typeof value === "string") {
+        try {
+            const parsed = JSON.parse(value);
+            if (Array.isArray(parsed)) {
+                return parsed
+                    .map((item) => String(item || "").trim())
+                    .filter(Boolean);
+            }
+        } catch (_error) {
+            return value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean);
+        }
+    }
+
+    const error = new Error(`${fieldName} must be an array of strings`);
+    error.statusCode = 400;
+    throw error;
 };
 
 const getRecommendedProperties = async (req, res) => {

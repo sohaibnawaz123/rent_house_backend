@@ -41,6 +41,39 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
             },
+
+            public_facilities: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                get() {
+                    const rawValue = this.getDataValue(
+                        "public_facilities"
+                    );
+
+                    if (!rawValue) return [];
+
+                    try {
+                        const parsed = JSON.parse(rawValue);
+                        return Array.isArray(parsed) ? parsed : [];
+                    } catch (_error) {
+                        return [];
+                    }
+                },
+                set(value) {
+                    if (value == null) {
+                        this.setDataValue("public_facilities", null);
+                        return;
+                    }
+
+                    const facilities = Array.isArray(value)
+                        ? value
+                        : [value];
+                    this.setDataValue(
+                        "public_facilities",
+                        JSON.stringify(facilities)
+                    );
+                },
+            },
         },
         {
             tableName: "property_details",
